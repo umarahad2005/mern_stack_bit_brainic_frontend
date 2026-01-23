@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-    baseURL: 'https://mern-stack-bit-brainic-backend.onrender.com/api',
+    baseURL: 'https://mern-stack-bit-brainic-backend.onrender.com',
     headers: {
         'Content-Type': 'application/json'
     }
