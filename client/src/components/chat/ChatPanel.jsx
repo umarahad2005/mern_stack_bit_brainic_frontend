@@ -70,35 +70,36 @@ const ChatPanel = ({ messages, onSendMessage, isLoading, isTyping }) => {
     return (
         <div className="flex-1 flex flex-col h-full bg-primary">
             {/* Messages Area */}
-            <div className="flex-1 overflow-y-auto p-4 space-y-4">
+            <div className="flex-1 overflow-y-auto p-3 sm:p-4 space-y-3 sm:space-y-4">
                 {messages.length === 0 ? (
                     // Welcome screen
-                    <div className="h-full flex flex-col items-center justify-center text-center px-4">
+                    <div className="h-full flex flex-col items-center justify-center text-center px-2 sm:px-4">
                         <motion.div
                             initial={{ opacity: 0, scale: 0.9 }}
                             animate={{ opacity: 1, scale: 1 }}
                             transition={{ duration: 0.3 }}
+                            className="w-full max-w-2xl"
                         >
-                            <div className="w-20 h-20 rounded-full accent-bg-light flex items-center justify-center mx-auto mb-6">
-                                <img src="/log.jpeg" alt="Bit Brainic" className="w-12 h-12" />
+                            <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full accent-bg-light flex items-center justify-center mx-auto mb-4 sm:mb-6">
+                                <img src="/log.jpeg" alt="Bit Brainic" className="w-10 h-10 sm:w-12 sm:h-12" />
                             </div>
-                            <h2 className="text-2xl font-bold mb-2">Welcome to Bit Brainic!</h2>
-                            <p className="text-secondary mb-8 max-w-md">
+                            <h2 className="text-xl sm:text-2xl font-bold mb-2">Welcome to Bit Brainic!</h2>
+                            <p className="text-secondary mb-6 sm:mb-8 max-w-md mx-auto text-sm sm:text-base">
                                 I'm your AI CS tutor. Ask me anything about programming, algorithms,
                                 data structures, or any computer science topic!
                             </p>
 
-                            <div className="grid sm:grid-cols-2 gap-3 max-w-2xl">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
                                 {promptStarters.map((prompt, index) => (
                                     <motion.button
                                         key={index}
                                         onClick={() => handleQuickReply(prompt)}
-                                        className="flex items-center gap-3 p-4 rounded-xl bg-secondary border border-theme hover:border-[var(--accent)] text-left transition-colors group"
+                                        className="flex items-center gap-2 sm:gap-3 p-3 sm:p-4 rounded-xl bg-secondary border border-theme hover:border-[var(--accent)] text-left transition-colors group"
                                         whileHover={{ scale: 1.02 }}
                                         whileTap={{ scale: 0.98 }}
                                     >
-                                        <Sparkles className="w-5 h-5 accent-color flex-shrink-0" />
-                                        <span className="text-sm">{prompt}</span>
+                                        <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 accent-color flex-shrink-0" />
+                                        <span className="text-xs sm:text-sm">{prompt}</span>
                                     </motion.button>
                                 ))}
                             </div>
@@ -157,7 +158,7 @@ const ChatPanel = ({ messages, onSendMessage, isLoading, isTyping }) => {
             </div>
 
             {/* Input Area */}
-            <div className="p-4 border-t border-theme bg-secondary">
+            <div className="p-3 sm:p-4 border-t border-theme bg-secondary">
                 <form onSubmit={handleSubmit} className="max-w-4xl mx-auto">
                     <div className="relative flex items-center gap-2">
                         <input
@@ -166,7 +167,7 @@ const ChatPanel = ({ messages, onSendMessage, isLoading, isTyping }) => {
                             value={input}
                             onChange={(e) => setInput(e.target.value)}
                             placeholder="Ask me anything about CS..."
-                            className="input pr-12"
+                            className="input pr-12 text-base"
                             disabled={isTyping}
                         />
                         <motion.button
@@ -182,7 +183,7 @@ const ChatPanel = ({ messages, onSendMessage, isLoading, isTyping }) => {
                             <Send className="w-4 h-4" />
                         </motion.button>
                     </div>
-                    <p className="text-xs text-muted text-center mt-2">
+                    <p className="text-[10px] sm:text-xs text-muted text-center mt-2">
                         Bit Brainic can make mistakes. Please verify important information.
                     </p>
                 </form>

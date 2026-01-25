@@ -8,6 +8,10 @@ import {
 import { Link } from 'react-router-dom';
 import { adminApi } from '../../api';
 import ThemeToggle from '../../components/layout/ThemeToggle';
+import {
+    ResponsiveContainer, LineChart, Line, BarChart, Bar,
+    XAxis, YAxis, CartesianGrid, Tooltip, Area
+} from 'recharts';
 
 const AdminPanel = () => {
     const [password, setPassword] = useState('');
@@ -202,8 +206,8 @@ const AdminPanel = () => {
                         <button
                             onClick={() => setActiveTab('overview')}
                             className={`py-3 px-4 border-b-2 transition-colors ${activeTab === 'overview'
-                                    ? 'border-[var(--accent)] accent-color font-medium'
-                                    : 'border-transparent text-secondary hover:text-primary'
+                                ? 'border-[var(--accent)] accent-color font-medium'
+                                : 'border-transparent text-secondary hover:text-primary'
                                 }`}
                         >
                             <BarChart3 className="w-4 h-4 inline mr-2" />
@@ -212,8 +216,8 @@ const AdminPanel = () => {
                         <button
                             onClick={() => setActiveTab('users')}
                             className={`py-3 px-4 border-b-2 transition-colors ${activeTab === 'users'
-                                    ? 'border-[var(--accent)] accent-color font-medium'
-                                    : 'border-transparent text-secondary hover:text-primary'
+                                ? 'border-[var(--accent)] accent-color font-medium'
+                                : 'border-transparent text-secondary hover:text-primary'
                                 }`}
                         >
                             <Users className="w-4 h-4 inline mr-2" />
@@ -285,41 +289,130 @@ const AdminPanel = () => {
 
                             {/* Charts Section */}
                             <div className="grid lg:grid-cols-2 gap-6 mb-8">
+                                {/* Bar Chart - User Registrations */}
                                 <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }} className="card">
                                     <h3 className="font-semibold mb-4">User Registrations (Last 7 Days)</h3>
-                                    <div className="h-48 flex items-end gap-2">
-                                        {stats?.charts?.userActivityByDay?.map((day, index) => (
-                                            <div key={index} className="flex-1 flex flex-col items-center gap-1">
-                                                <motion.div
-                                                    initial={{ height: 0 }}
-                                                    animate={{ height: `${Math.max((day.count / Math.max(...stats.charts.userActivityByDay.map(d => d.count), 1)) * 100, 5)}%` }}
-                                                    transition={{ delay: 0.5 + index * 0.05 }}
-                                                    className="w-full accent-bg rounded-t min-h-[8px]"
-                                                />
-                                                <span className="text-xs text-muted">
-                                                    {new Date(day._id).toLocaleDateString('en', { weekday: 'short' })}
-                                                </span>
+                                    <div className="h-64">
+                                        {stats?.charts?.userActivityByDay?.length > 0 ? (
+                                            <ResponsiveContainer width="100%" height="100%">
+                                                <BarChart
+                                                    data={stats.charts.userActivityByDay.map(day => ({
+                                                        name: new Date(day._id).toLocaleDateString('en', { weekday: 'short' }),
+                                                        users: day.count,
+                                                        fullDate: new Date(day._id).toLocaleDateString()
+                                                    }))}
+                                                    margin={{ top: 10, right: 10, left: -10, bottom: 0 }}
+                                                >
+                                                    <defs>
+                                                        <linearGradient id="userGradient" x1="0" y1="0" x2="0" y2="1">
+                                                            <stop offset="0%" stopColor="#6366f1" stopOpacity={1} />
+                                                            <stop offset="100%" stopColor="#6366f1" stopOpacity={0.6} />
+                                                        </linearGradient>
+                                                    </defs>
+                                                    <CartesianGrid strokeDasharray="3 3" stroke="var(--border-color, #374151)" opacity={0.3} />
+                                                    <XAxis
+                                                        dataKey="name"
+                                                        tick={{ fill: 'var(--text-muted, #9ca3af)', fontSize: 12 }}
+                                                        axisLine={{ stroke: 'var(--border-color, #374151)' }}
+                                                        tickLine={false}
+                                                    />
+                                                    <YAxis
+                                                        tick={{ fill: 'var(--text-muted, #9ca3af)', fontSize: 12 }}
+                                                        axisLine={false}
+                                                        tickLine={false}
+                                                        allowDecimals={false}
+                                                    />
+                                                    <Tooltip
+                                                        contentStyle={{
+                                                            backgroundColor: 'var(--bg-secondary, #1f2937)',
+                                                            border: '1px solid var(--border-color, #374151)',
+                                                            borderRadius: '8px',
+                                                            color: 'var(--text-primary, #fff)'
+                                                        }}
+                                                        labelFormatter={(value, payload) => payload?.[0]?.payload?.fullDate || value}
+                                                        formatter={(value) => [`${value} users`, 'Registrations']}
+                                                    />
+                                                    <Bar
+                                                        dataKey="users"
+                                                        fill="url(#userGradient)"
+                                                        radius={[4, 4, 0, 0]}
+                                                        animationDuration={1000}
+                                                    />
+                                                </BarChart>
+                                            </ResponsiveContainer>
+                                        ) : (
+                                            <div className="h-full flex items-center justify-center text-muted">
+                                                No registration data available
                                             </div>
-                                        ))}
+                                        )}
                                     </div>
                                 </motion.div>
 
+                                {/* Line Chart - Chat Activity */}
                                 <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }} className="card">
                                     <h3 className="font-semibold mb-4">Chat Activity (Last 7 Days)</h3>
-                                    <div className="h-48 flex items-end gap-2">
-                                        {stats?.charts?.chatActivityByDay?.map((day, index) => (
-                                            <div key={index} className="flex-1 flex flex-col items-center gap-1">
-                                                <motion.div
-                                                    initial={{ height: 0 }}
-                                                    animate={{ height: `${Math.max((day.count / Math.max(...stats.charts.chatActivityByDay.map(d => d.count), 1)) * 100, 5)}%` }}
-                                                    transition={{ delay: 0.6 + index * 0.05 }}
-                                                    className="w-full bg-purple-500 rounded-t min-h-[8px]"
-                                                />
-                                                <span className="text-xs text-muted">
-                                                    {new Date(day._id).toLocaleDateString('en', { weekday: 'short' })}
-                                                </span>
+                                    <div className="h-64">
+                                        {stats?.charts?.chatActivityByDay?.length > 0 ? (
+                                            <ResponsiveContainer width="100%" height="100%">
+                                                <LineChart
+                                                    data={stats.charts.chatActivityByDay.map(day => ({
+                                                        name: new Date(day._id).toLocaleDateString('en', { weekday: 'short' }),
+                                                        chats: day.count,
+                                                        fullDate: new Date(day._id).toLocaleDateString()
+                                                    }))}
+                                                    margin={{ top: 10, right: 10, left: -10, bottom: 0 }}
+                                                >
+                                                    <defs>
+                                                        <linearGradient id="chatGradient" x1="0" y1="0" x2="0" y2="1">
+                                                            <stop offset="0%" stopColor="#a855f7" stopOpacity={0.3} />
+                                                            <stop offset="100%" stopColor="#a855f7" stopOpacity={0} />
+                                                        </linearGradient>
+                                                    </defs>
+                                                    <CartesianGrid strokeDasharray="3 3" stroke="var(--border-color, #374151)" opacity={0.3} />
+                                                    <XAxis
+                                                        dataKey="name"
+                                                        tick={{ fill: 'var(--text-muted, #9ca3af)', fontSize: 12 }}
+                                                        axisLine={{ stroke: 'var(--border-color, #374151)' }}
+                                                        tickLine={false}
+                                                    />
+                                                    <YAxis
+                                                        tick={{ fill: 'var(--text-muted, #9ca3af)', fontSize: 12 }}
+                                                        axisLine={false}
+                                                        tickLine={false}
+                                                        allowDecimals={false}
+                                                    />
+                                                    <Tooltip
+                                                        contentStyle={{
+                                                            backgroundColor: 'var(--bg-secondary, #1f2937)',
+                                                            border: '1px solid var(--border-color, #374151)',
+                                                            borderRadius: '8px',
+                                                            color: 'var(--text-primary, #fff)'
+                                                        }}
+                                                        labelFormatter={(value, payload) => payload?.[0]?.payload?.fullDate || value}
+                                                        formatter={(value) => [`${value} chats`, 'Activity']}
+                                                    />
+                                                    <Area
+                                                        type="monotone"
+                                                        dataKey="chats"
+                                                        stroke="transparent"
+                                                        fill="url(#chatGradient)"
+                                                    />
+                                                    <Line
+                                                        type="monotone"
+                                                        dataKey="chats"
+                                                        stroke="#a855f7"
+                                                        strokeWidth={3}
+                                                        dot={{ fill: '#a855f7', strokeWidth: 2, r: 4 }}
+                                                        activeDot={{ r: 6, fill: '#a855f7', stroke: '#fff', strokeWidth: 2 }}
+                                                        animationDuration={1000}
+                                                    />
+                                                </LineChart>
+                                            </ResponsiveContainer>
+                                        ) : (
+                                            <div className="h-full flex items-center justify-center text-muted">
+                                                No chat activity data available
                                             </div>
-                                        ))}
+                                        )}
                                     </div>
                                 </motion.div>
                             </div>

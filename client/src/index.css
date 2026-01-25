@@ -281,3 +281,87 @@ body {
 .typing-dot:nth-child(3) {
   animation-delay: 0.4s;
 }
+
+/* Bot message content styling for better readability */
+.bot-message-content {
+  line-height: 1.7;
+  letter-spacing: 0.01em;
+}
+
+.bot-message-content p {
+  margin-bottom: 0.75rem;
+}
+
+.bot-message-content p:last-child {
+  margin-bottom: 0;
+}
+
+.bot-message-content h1,
+.bot-message-content h2,
+.bot-message-content h3 {
+  color: var(--text-primary);
+  line-height: 1.3;
+}
+
+.bot-message-content ul,
+.bot-message-content ol {
+  padding-left: 0;
+  margin: 0.5rem 0;
+}
+
+.bot-message-content li {
+  margin-bottom: 0.375rem;
+  line-height: 1.6;
+}
+
+.bot-message-content li::marker {
+  color: var(--accent);
+}
+
+.bot-message-content strong {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.bot-message-content code {
+  font-size: 0.875em;
+}
+
+/* Prose content wrapper */
+.prose-content {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.prose-content p:empty {
+  display: none;
+}
+
+/* Mobile responsive adjustments */
+@media (max-width: 640px) {
+  .card {
+    padding: 1rem;
+  }
+  
+  .btn {
+    padding: 0.5rem 1rem;
+    font-size: 0.8125rem;
+  }
+  
+  .input {
+    padding: 0.625rem 0.875rem;
+    font-size: 1rem; /* Prevents zoom on iOS */
+  }
+  
+  /* Improve touch targets */
+  button, a {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  /* Better spacing for mobile chat */
+  .bot-message-content {
+    font-size: 0.9375rem;
+    line-height: 1.6;
+  }
+}

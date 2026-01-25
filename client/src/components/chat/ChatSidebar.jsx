@@ -7,7 +7,7 @@ const ChatSidebar = ({ chats, currentChatId, onSelectChat, onNewChat, onDeleteCh
     const { logout, user } = useAuth();
 
     return (
-        <div className="w-72 h-full bg-secondary border-r border-theme flex flex-col">
+        <div className="w-64 sm:w-72 h-full bg-secondary border-r border-theme flex flex-col">
             {/* Header */}
             <div className="p-4 border-b border-theme">
                 <div className="flex items-center gap-2 mb-4">
